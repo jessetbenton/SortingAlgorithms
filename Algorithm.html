@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Selection Sort</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <script src="js/utils.js"></script>
+    <script src="js/sortingAlgorithms.js"></script>
+    <script src="js/jquery-2.0.3.min.js"></script>
+  </head>
+  <body>
+    <div id="container">
+      <canvas id="canvas" width="800" height="400" style="height: 90%;width: 90%; background: black;"></canvas>
+    </div>
+    <script>
+        $(document).ready(function() {
+          // game state
+          var randData = new Array(100);
+          var canvas = document.getElementById('canvas');
+          var ctx = canvas.getContext('2d');
+          initArray(randData);
+          algorithm = new InsertionSort(randData, canvas);
+          update = function() {
+            if( !algorithm.done ) {
+               //update
+               algorithm.step();
+               //draw
+               ctx.clearRect(0,0,canvas.width, canvas.height);
+               algorithm.draw(ctx);
+             }
+          }
+          speed = 200;
+          printVal('miliSlide', 'miliseconds');
+          setDynamicTimeout(update);
+        });
+        
+    </script>
+    <button id="reset" onclick="algorithm.restart()">Restart</button>
+    <input id="miliSlide" type="range" name="points" min="1" max="600" value="200" onchange="speed = this.value; printVal('miliSlide', 'miliseconds');">
+    <input id="miliseconds" type="number" size="1" onchange="speed = this.value; printVal('miliseconds', 'miliSlide');"/>ms
+    <button id="soundToggle" onclick="algorithm.audioOn *= -1; this.innerHTML = (this.innerHTML === 'Sound Off') ? 'Sound On' : 'Sound Off';">Sound Off</button>
+    <br/>
+    Size <input id="dataSize" type="number" value="100"/>
+    <!--<select id="algorithmSelect">-->
+    <!--    <option value="bubble">Bubble Sort</option>-->
+    <!--    <option value="insertion">Insertion Sort</option>-->
+    <!--    <option value="select">Selection Sort</option>-->
+    <!--</select>-->
+    <button id="changeData" onclick="changeAlgoType(algorithm)">New Data</button>
+  </body>
+</html>
