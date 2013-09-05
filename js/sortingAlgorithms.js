@@ -17,7 +17,8 @@ function SortingAlgorithm() {
     this.initAudio = function() {
         if(typeof AudioContext === "undefined" && typeof webkitAudioContext === "undefined") {
             this.hasAudio = false;
-            throw new Error('AudioContext not supported. :(');
+            console.log('AudioContext not supported. :(');
+            $('#soundToggle').hide();
         }
         if(this.hasAudio) {
             this.oscillator_1 = audioContext.createOscillator();

@@ -36,7 +36,7 @@
         
     </script>
     <button id="reset" onclick="algorithm.restart()">Restart</button>
-    <input id="miliSlide" type="range" name="points" min="1" max="600" value="200" step="10" onchange="speed = this.value; updateTimer(); printVal('miliSlide', 'miliseconds');">
+    <input id="miliSlide" type="range" name="points" min="1" max="600" value="200" step="1" onchange="speed = this.value; updateTimer(); printVal('miliSlide', 'miliseconds');">
     <input id="miliseconds" type="number" size="1" min="1" onchange="speed = this.value; updateTimer(); printVal('miliseconds', 'miliSlide');"/>ms
     <button id="soundToggle" value="-1" onclick="algorithm.audioOn *= -1; this.value = algorithm.audioOn; this.innerHTML = (this.innerHTML === 'Sound Off') ? 'Sound On' : 'Sound Off';">Sound Off</button>
     <br/>
