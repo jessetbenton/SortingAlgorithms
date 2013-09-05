@@ -1,7 +1,6 @@
 function SortingAlgorithm() {
-    this.audioContext;
-    this.audioContext2;
     this.canvas;
+    this.context;
     this.hasAudio = true;
     this.audioOn = -1;
     this.sort = "SortingAlgorithm";
@@ -16,27 +15,21 @@ function SortingAlgorithm() {
     this.index = 1;
     this.cursor = this.index;
     this.initAudio = function() {
-        if(typeof AudioContext !== "undefined") {
-            this.audioContext = new AudioContext();
-            this.audioContext2 = new AudioContext();
-        } else if (typeof webkitAudioContext !== "undefined") {
-            this.audioContext = new webkitAudioContext();
-            this.audioContext2 = new webkitAudioContext();
-        } else {
+        if(typeof AudioContext === "undefined" && typeof webkitAudioContext === "undefined") {
             this.hasAudio = false;
             throw new Error('AudioContext not supported. :(');
         }
         if(this.hasAudio) {
-            this.oscillator_1 = this.audioContext.createOscillator();
+            this.oscillator_1 = audioContext.createOscillator();
             this.oscillator_1.type = 3;
-            this.oscillator_2 = this.audioContext2.createOscillator();
+            this.oscillator_2 = audioContext2.createOscillator();
             this.oscillator_2.type = 3; // sine wave
         }
     }
     this.playNote1 = function(value) {
         if(this.hasAudio && this.audioOn === 1) {
             this.oscillator_1.frequency.value = 300 + value * 500;
-            this.oscillator_1.connect(this.audioContext.destination);
+            this.oscillator_1.connect(audioContext.destination);
             this.oscillator_1.noteOn && this.oscillator_1.noteOn(0);
         }
     }
@@ -48,7 +41,7 @@ function SortingAlgorithm() {
     this.playNote2 = function(value) {
         if(this.hasAudio && this.audioOn === 1) {
             this.oscillator_2.frequency.value = 300 + (value * 500);
-            this.oscillator_2.connect(this.audioContext2.destination);
+            this.oscillator_2.connect(audioContext2.destination);
             this.oscillator_2.noteOn && this.oscillator_2.noteOn(0);
         }
     }
@@ -73,6 +66,15 @@ function SortingAlgorithm() {
         this.data = randData;
         this.dataSetCopy = copy(randData);
     }
+    this.update = function() {
+        if( !algorithm.done ) {
+            /*update*/
+            algorithm.step();
+            /*draw*/
+            clearCanvas();
+            algorithm.draw();
+        }
+    }
 }
 
 /******************
@@ -80,16 +82,17 @@ function SortingAlgorithm() {
  ******************/
 BubbleSort.prototype = new SortingAlgorithm();
 BubbleSort.prototype.constructor = BubbleSort;
-function BubbleSort(dataSet, canvasElement) {
+function BubbleSort(dataSet, canvasId) {
     this.data = dataSet;
     this.dataSetCopy = copy(dataSet);
     this.sort = "bubble";
-    this.canvas = canvasElement;
+    this.canvas = document.getElementById(canvasId);
+    this.context = this.canvas.getContext('2d');
     this.swapped = true;
     this.lastSwapped = this.data.length;
     this.initAudio();
 }
-BubbleSort.prototype.draw = function (context) {
+BubbleSort.prototype.draw = function () {
     var sortWidth, width, height, x, y;
     for (var i = 0; i < this.data.length; i++) {
       sortWidth = this.canvas.width;
@@ -100,15 +103,15 @@ BubbleSort.prototype.draw = function (context) {
       x = i * width + (this.canvas.width - sortWidth);
       
       if (i === this.cursor || i === this.index) {
-        context.fillStyle = "blue";
+        this.context.fillStyle = "blue";
       }
       else {
-        context.fillStyle = "red";    
+        this.context.fillStyle = "red";    
       }
       if( i >= this.lastSwapped || this.done ) {
-        context.fillStyle = "green";
+        this.context.fillStyle = "green";
       }
-      context.fillRect(x, y, width * .95, height);
+      this.context.fillRect(x, y, width * .95, height);
     }
 };
 BubbleSort.prototype.step = function() {   
@@ -155,18 +158,19 @@ BubbleSort.prototype.restartMore = function() {
  ******************/
 SelectionSort.prototype = new SortingAlgorithm();
 SelectionSort.prototype.constructor = SelectionSort;
-function SelectionSort(dataSet, canvasElement) {
+function SelectionSort(dataSet, canvasId) {
     this.data = dataSet;
     this.dataSetCopy = copy(dataSet);
     this.sort = "selection";
-    this.canvas = canvasElement;
+    this.canvas = document.getElementById(canvasId);
+    this.context = this.canvas.getContext('2d');
     this.min = 0;
     this.index = 0;
     this.cursor = this.index;
     this.initAudio();
 }
-SelectionSort.prototype.draw = function(context) {
-    var sortWidth, width, height, x, y, context;
+SelectionSort.prototype.draw = function() {
+    var sortWidth, width, height, x, y;
       
     for (var i = 0; i < this.data.length; i++) {
         sortWidth = this.canvas.width;
@@ -177,21 +181,21 @@ SelectionSort.prototype.draw = function(context) {
         x = i * width + (this.canvas.width - sortWidth);
         
         if (i === this.index) {
-            context.fillStyle = "white";
+            this.context.fillStyle = "white";
         }
         else {
-            context.fillStyle = "red";
+            this.context.fillStyle = "red";
         }
         if (i < this.cursor) {
-            context.fillStyle = "blue";
+            this.context.fillStyle = "blue";
         }
         if (i === this.min) {
-            context.fillStyle = "green";
+            this.context.fillStyle = "green";
         }
         if (this.done) {
-            context.fillStyle = "green";
+            this.context.fillStyle = "green";
         }
-        context.fillRect(x, y, width * .95, height);
+        this.context.fillRect(x, y, width * .95, height);
     }
 };
 SelectionSort.prototype.step = function() {
@@ -234,14 +238,15 @@ SelectionSort.prototype.restartMore = function() {
  ******************/
 InsertionSort.prototype = new SortingAlgorithm();
 InsertionSort.prototype.constructor = InsertionSort;
-function InsertionSort(dataSet, canvasElement) {
+function InsertionSort(dataSet, canvasId) {
     this.data = dataSet;
     this.sort = "insertion";
     this.dataSetCopy = copy(dataSet);
-    this.canvas = canvasElement;
+    this.canvas = document.getElementById(canvasId);
+    this.context = this.canvas.getContext('2d');
     this.initAudio();
 }
-InsertionSort.prototype.draw = function(context) {
+InsertionSort.prototype.draw = function() {
     var sortWidth, width, height, x, y;
 
     for (var i = 0; i < this.data.length; i++) {
@@ -253,18 +258,18 @@ InsertionSort.prototype.draw = function(context) {
         x = i * width + (this.canvas.width - sortWidth);
         
         if (i === this.index) {
-            context.fillStyle = "white";
+            this.context.fillStyle = "white";
         }
         else {
-            context.fillStyle = "red";
+            this.context.fillStyle = "red";
         }
         if (i === this.cursor || i === this.cursor - 1) {
-            context.fillStyle = "blue";
+            this.context.fillStyle = "blue";
         }
         if (this.done) {
-            context.fillStyle = "green";
+            this.context.fillStyle = "green";
         }
-        context.fillRect(x, y, width * .95, height);
+        this.context.fillRect(x, y, width * .95, height);
     }
 };
 InsertionSort.prototype.step = function() {

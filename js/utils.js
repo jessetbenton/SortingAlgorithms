@@ -1,3 +1,6 @@
+function clearCanvas() {
+    ctx.clearRect(0,0, canvas.width, canvas.height);
+}
 function initArray(a) {
   for( var i = 0; i < a.length; i++ ) {
       a[i] = Math.random();
@@ -21,47 +24,41 @@ printVal = function(slider, textBox) {
   var x = document.getElementById(slider);
   var y = document.getElementById(textBox);
   y.value = x.value;
-  
 };
-function setDynamicTimeout( callback ) {
-  var internalCallback = function()
-  {
-    return function()
-    {
-        window.setTimeout( internalCallback, speed );
-        callback();
-    };
-  }();
-
-  window.setTimeout( internalCallback, speed );
+function updateTimer() {
+    clearInterval(timer);
+    timer = setInterval(algorithm.update, speed);
 }
-function changeAlgoType(algorithm) {
+function changeAlgoType() {
     var size = $('#dataSize')[0].value;
     var existingAlgorithm = algorithm.sort;
-    // var selectedAlgorithm = $('#algorithmSelect')[0].value;
+    var selectedAlgorithm = $('#algorithmSelect')[0].value;
     var data = algorithm.data;
     
     if( size > 0 && existingAlgorithm !== selectedAlgorithm ) {
-        // algorithm = null;
-        // delete(algorithm);
-
-        algorithm = new BubbleSort(algorithm.data, algorithm.canvas);
-        // switch(selectedAlgorithm){
-        //     case 'bubble':
-        //         console.log("new BubbleSort");
-        //         algorithm = new BubbleSort(data, $('#canvas'));
-        //         break;
-        //     case 'insertion':
-        //         console.log("new InsertionSort");
-        //         algorithm = new InsertionSort(data, $('#canvas'));
-        //         break;
-        //     case 'selection':
-        //         console.log("new SelectionSort");
-        //         algorithm = new SelectionSort(data, $('#canvas'));
-        //         break;
-        // }
+        clearInterval(timer);
+        algorithm.stopNote1();
+        algorithm.stopNote2();
+        switch(selectedAlgorithm){
+            case 'bubble':
+                console.log("new BubbleSort");
+                algorithm = new BubbleSort(data, 'canvas');
+                break;
+            case 'insertion':
+                console.log("new InsertionSort");
+                algorithm = new InsertionSort(data, 'canvas');
+                break;
+            case 'selection':
+                console.log("new SelectionSort");
+                algorithm = new SelectionSort(data, 'canvas');
+                break;
+        }
         algorithm.generateData(size);
+        algorithm.audioOn = parseInt(document.getElementById('soundToggle').value);
         algorithm.restart();
+        console.log("Update: ");
+        console.dir(algorithm.update);
+        timer = window.setInterval(algorithm.update, speed);
     }
     else if( size > 0 ) {
         console.log('change data only');
