@@ -15,8 +15,8 @@
     <script>
         $(document).ready(function() {
             var randData = new Array(100);
-            canvas = document.getElementById('canvas');
-            ctx = canvas.getContext('2d');
+            var canvas = document.getElementById('canvas');
+            var ctx = canvas.getContext('2d');
           
             if(typeof AudioContext !== "undefined") {
                 audioContext = new AudioContext();
@@ -37,14 +37,14 @@
     </script>
     <button id="reset" onclick="algorithm.restart()">Restart</button>
     <input id="miliSlide" type="range" name="points" min="1" max="600" value="200" step="10" onchange="speed = this.value; updateTimer(); printVal('miliSlide', 'miliseconds');">
-    <input id="miliseconds" type="number" size="1" onchange="speed = this.value; updateTimer(); printVal('miliseconds', 'miliSlide');"/>ms
+    <input id="miliseconds" type="number" size="1" min="1" onchange="speed = this.value; updateTimer(); printVal('miliseconds', 'miliSlide');"/>ms
     <button id="soundToggle" value="-1" onclick="algorithm.audioOn *= -1; this.value = algorithm.audioOn; this.innerHTML = (this.innerHTML === 'Sound Off') ? 'Sound On' : 'Sound Off';">Sound Off</button>
     <br/>
     Size <input id="dataSize" type="number" value="100"/>
     <select id="algorithmSelect">
         <option value="bubble">Bubble Sort</option>
         <option value="insertion">Insertion Sort</option>
-        <option value="select">Selection Sort</option>
+        <option value="selection">Selection Sort</option>
     </select>
     <button id="changeData" onclick="changeAlgoType()">New Data</button>
   </body>

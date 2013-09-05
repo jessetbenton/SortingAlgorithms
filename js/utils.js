@@ -1,5 +1,5 @@
 function clearCanvas() {
-    ctx.clearRect(0,0, canvas.width, canvas.height);
+    algorithm.context.clearRect(0,0, canvas.width, canvas.height);
 }
 function initArray(a) {
   for( var i = 0; i < a.length; i++ ) {
@@ -31,8 +31,9 @@ function updateTimer() {
 }
 function changeAlgoType() {
     var size = $('#dataSize')[0].value;
-    var existingAlgorithm = algorithm.sort;
+    var existingAlgorithm = algorithm.name;
     var selectedAlgorithm = $('#algorithmSelect')[0].value;
+    console.log(existingAlgorithm + " : " + selectedAlgorithm);
     var data = algorithm.data;
     
     if( size > 0 && existingAlgorithm !== selectedAlgorithm ) {
@@ -56,8 +57,6 @@ function changeAlgoType() {
         algorithm.generateData(size);
         algorithm.audioOn = parseInt(document.getElementById('soundToggle').value);
         algorithm.restart();
-        console.log("Update: ");
-        console.dir(algorithm.update);
         timer = window.setInterval(algorithm.update, speed);
     }
     else if( size > 0 ) {

@@ -3,7 +3,7 @@ function SortingAlgorithm() {
     this.context;
     this.hasAudio = true;
     this.audioOn = -1;
-    this.sort = "SortingAlgorithm";
+    this.name = "SortingAlgorithm";
     this.data; 
     this.dataSetCopy;
     this.comparisons = 0;
@@ -85,7 +85,7 @@ BubbleSort.prototype.constructor = BubbleSort;
 function BubbleSort(dataSet, canvasId) {
     this.data = dataSet;
     this.dataSetCopy = copy(dataSet);
-    this.sort = "bubble";
+    this.name = "bubble";
     this.canvas = document.getElementById(canvasId);
     this.context = this.canvas.getContext('2d');
     this.swapped = true;
@@ -161,7 +161,7 @@ SelectionSort.prototype.constructor = SelectionSort;
 function SelectionSort(dataSet, canvasId) {
     this.data = dataSet;
     this.dataSetCopy = copy(dataSet);
-    this.sort = "selection";
+    this.name = "selection";
     this.canvas = document.getElementById(canvasId);
     this.context = this.canvas.getContext('2d');
     this.min = 0;
@@ -240,7 +240,7 @@ InsertionSort.prototype = new SortingAlgorithm();
 InsertionSort.prototype.constructor = InsertionSort;
 function InsertionSort(dataSet, canvasId) {
     this.data = dataSet;
-    this.sort = "insertion";
+    this.name = "insertion";
     this.dataSetCopy = copy(dataSet);
     this.canvas = document.getElementById(canvasId);
     this.context = this.canvas.getContext('2d');
